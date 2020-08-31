@@ -1,0 +1,289 @@
+body {
+    
+margin-top: 10px;
+    
+margin-left: 15px;
+    
+margin-right: 15px;
+
+}
+
+
+/*cabecera de la página*/
+
+h1 { 
+ font-family: 'Amita';font-size: 20px;
+  
+  text-align: center; padding: 0.5em; 
+}
+h2 { 
+font-family: 'Amita';font-size: 15px;
+  
+  text-align: center; padding: 0.5em; 
+
+}
+
+h3 { 
+font-family: 'Amita';
+font-size: 13px;
+  
+  text-align: center;
+ padding: 0.3em; 
+
+}
+
+p {
+
+    font-family: 'Fredoka One';font-size: 13px;
+
+}
+
+
+/*div principal del calendario*/
+
+#calendario {
+ margin: center; border: 3px black ; max-width: 536px; 
+ 
+  background: white; text-align: center; 
+}
+
+/*tabla del calendario*/
+
+#diasc { 
+border: 1px solid black; border-collapse: 
+
+         separate; border-spacing: 4px; 
+}
+
+#diasc th,
+#diasc td {
+ font: normal 14pt arial; width: 70px; height: 40px;
+ }
+
+#diasc th {
+ color: black; background-color: #5ecdec 
+}
+
+#diasc td {
+ color: #492736; background-color: #9bf5ff
+ }
+
+/*línea de la fecha actual*/
+
+#fechaactual { 
+font: bold 12pt arial; padding: 0.3em
+ }
+
+#fechaactual i { 
+cursor: pointer ; 
+}
+
+#fechaactual i:hover {
+ color: navy; text-decoration: underline;
+ }
+
+/*formulario de busqueda de fechas*/
+
+#buscafecha { 
+background-color: white; color: black; padding: 2px 
+}
+
+#buscafecha select, #buscafecha input  {
+ background-color: #9bf5ff; 
+          
+  color: black; font: bold 9.5pt 'Fredoka One'; 
+ }
+#buscafecha [type=text]  {
+ text-align: center; 
+}
+
+#buscafecha  [type=button] { 
+cursor: pointer; 
+}
+
+/*cabecera del calendario*/
+ 
+#anterior { 
+float: left; width: 100px; font: bold 10pt 'Fredoka One';
+      
+    padding: 0.3em 0.1em; cursor: pointer ;
+ }
+
+#posterior { 
+float: right; width: 100px; font: bold 10pt 'Fredoka One'; 
+      
+    padding: 0.3em 0.1em; cursor: pointer ;
+}
+
+#anterior:hover {
+color: navy;text-decoration: underline;
+}
+
+#posterior:hover {
+color: navy; text-decoration: underline;
+}
+
+#titulos { 
+font: normal 15pt "Fredoka One"; padding: 0.2em; 
+}
+
+.btn {
+ 
+ border: 3em;
+  
+color: black;
+ 
+ padding: 12px 15px;
+  
+font-size: 17px;
+  
+cursor: pointer;
+
+}
+
+.danger{
+background-color: #9bf5ff;
+}
+.btn{
+background-color: #9bf5ff;
+}
+ /* puto */ 
+
+.danger:hover {
+background: #33ffff; color: black;
+}
+.btn:hover {
+background: #33ffff; color: black;
+}
+.button {
+  background-color: aqua; /* Green */
+  padding: 10px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 2px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.button5 {
+  background-color: #9bf5ff;
+  color: black;
+  border: 1px solid white;
+}
+
+.button5:hover {
+  background-color: #33ffff;
+  color: black;
+  border: 1px solid white;
+}
+  #img2{
+   
+ float: right;
+
+}
+
+#img1{
+    
+float: left;
+
+}
+@media screen and (max-width: 480px)
+{
+
+    #container_mt-3{
+        
+height: auto;
+        
+width: auto;
+       
+ margin: auto;
+    
+}
+    
+#calendario{
+         
+max-width: auto; 
+max-height: auto;
+    
+} 
+    
+#fechas {
+         
+max-width: auto; 
+max-height: auto; 
+margin: auto;
+    
+}
+
+    
+#body {
+    
+margin: auto;
+    
+width: auto;
+    
+height: auto;
+   
+}
+    
+#contenido{
+        
+width: auto;
+
+height: auto    
+}
+    
+#posterior:{
+width: auto;
+height: auto;
+}
+    
+#anterior:{
+width: auto;
+height: auto;
+
+}
+    
+#titulos:{
+width: auto;
+height: auto;
+}
+ 
+#img{
+max-width: 100%;
+    height: auto;
+}   
+#btn {
+  
+border: 13px, black;
+  
+color: black;
+  
+padding: 4px 14px;
+  
+font-size: 8px;
+  
+cursor: pointer;
+#img1{
+    
+float: left;
+    
+max-width: 50px;
+    
+min-height: 40px;
+
+} 
+ 
+#img2{
+    
+float: right;
+    
+max-width: 50px;
+    
+min-height: 30px;
+
+}
+
+}
+}
