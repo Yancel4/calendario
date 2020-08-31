@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <title>Calendario</title>
+  <meta charset="utf-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Amita' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Fredoka One' rel='stylesheet'>
+ <style>
+ <link href="main.css" rel="stylesheet"/>
+ </style>
+ <script>
+var txt32="..Calendario, Bomberos U.M.C..";
+
+var espera=150;
+
+var refresco=null;
+
+function rotulo_title() {
+        
+document.title=txt32;
+        
+txt32=txt32.substring(1,txt32.length)+txt32.charAt(0);
+        
+refresco=setTimeout("rotulo_title()",espera);}
+rotulo_title();
+    //Arrays de datos:
+meses=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+lasemana=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"]
+diassemana=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+//Tras cargarse la página ...
+window.onload = function() {
+//fecha actual
+hoy=new Date(); //objeto fecha actual
+diasemhoy=hoy.getDay(); //dia semana actual
+diahoy=hoy.getDate(); //dia mes actual
+meshoy=hoy.getMonth(); //mes actual
+annohoy=hoy.getFullYear(); //año actual
+// Elementos del DOM: en cabecera de calendario 
+tit=document.getElementById("titulos"); //cabecera del calendario
+ant=document.getElementById("anterior"); //mes anterior
+pos=document.getElementById("posterior"); //mes posterior
+// Elementos del DOM en primera fila
+f0=document.getElementById("fila0");
+//Pie de calendario
+pie=document.getElementById("fechaactual");
+pie.innerHTML+=lasemana[diasemhoy]+", "+diahoy+" de "+meses[meshoy]+" del "+annohoy;
+//formulario: datos iniciales:
+document.buscar.buscaanno.value=annohoy;
+// Definir elementos iniciales:
+mescal = meshoy; //mes principal
+annocal = annohoy //año principal
+//iniciar calendario:
+cabecera() 
+primeralinea()
+escribirdias()
+}
+//FUNCIONES de creación del calendario:
+//cabecera del calendario
+function cabecera() {
+         tit.innerHTML=meses[mescal];
+         mesant=mescal-1; //mes anterior
+         mespos=mescal+1; //mes posterior
+         if (mesant<0) {mesant=11;}
+         if (mespos>11) {mespos=0;}
+         ant.innerHTML=meses[mesant]
+         pos.innerHTML=meses[mespos]
+         } 
+//primera línea de tabla: días de la semana.
+function primeralinea() {
+         for (i=0;i<7;i++) {
+             celda0=f0.getElementsByTagName("th")[i];
+             celda0.innerHTML=diassemana[i]
+		 celda0.style.backgroundColor="#02c7c7";
+             
+                 celda0.style.color="rgb(0,0,0)"
+            
+             }
+         }
+//rellenar celdas con los días
+function escribirdias() {
+         //Buscar dia de la semana del dia 1 del mes:
+         primeromes=new Date(annocal,mescal,"1") //buscar primer día del mes
+         prsem=primeromes.getDay() //buscar día de la semana del día 1
+         prsem--; //adaptar al calendario español (empezar por lunes)
+         if (prsem==-1) {prsem=6;}
+         //buscar fecha para primera celda:
+         diaprmes=primeromes.getDate() 
+         prcelda=diaprmes-prsem; //restar días que sobran de la semana
+         empezar=primeromes.setDate(prcelda) //empezar= tiempo UNIX 1ª celda
+         diames=new Date() //convertir en fecha
+         diames.setTime(empezar); //diames=fecha primera celda.
+         //Recorrer las celdas para escribir el día:
+         for (i=1;i<7;i++) { //localizar fila
+             fila=document.getElementById("fila"+i);
+             for (j=0;j<7;j++) {
+                 midia=diames.getDate() 
+                 mimes=diames.getMonth()
+                 mianno=diames.getFullYear()
+                 celda=fila.getElementsByTagName("td")[j];
+                 celda.innerHTML=midia;
+                 //Recuperar estado inicial al cambiar de mes:
+                  celda.style.backgroundColor="#33ffff";
+                 
+                   celda.style.color="rgb(0,0,0)";
+                 
+                  //domingos en rojo
+                 if (j==6) { 
+                    celda.style.color="red";
+                 }
+                        //fechas
+			 //enero
+			if (mescal==0 && midia==6 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día del deporte.'>"+midia+"</cite>";
+         			}
+        		if (mescal==0 && midia==15 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día del maestro.'>"+midia+"</cite>";
+        			 }
+			  //febrero
+			if (mescal==1 && midia==12 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día de la juventud y Batallade la victoria.'>"+midia+"</cite>";
+         			}
+        		if (mescal==1 && midia==13 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de la Radio.'>"+midia+"</cite>";
+         			}
+         		if (mescal==1 && midia==15 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title=' Discurso de Angostura.'>"+midia+"</cite>";
+         			}
+         		if (mescal==1 && midia==19 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día de la Federación.'>"+midia+"</cite>";
+         			}
+         		if (mescal==1 && midia==21 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día internacional de la lengua materna.'>"+midia+"</cite>";
+			        }  
+			 //marzo
+			if (mescal==2 && midia==8 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de la Mujer'>"+midia+"</cite>";
+         			}
+        		if (mescal==2 && midia==10 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día del médico venezolano y Natalicio de José María Vargas.'>"+midia+"</cite>";
+         			}
+         		if (mescal==2 && midia==21 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial del Síndrome de Down.'>"+midia+"</cite>";
+         			}
+         		if (mescal==2 && midia==22 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial del Agua.'>"+midia+"</cite>";
+         			}
+         		if (mescal==2 && midia==26 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial del Clima.'>"+midia+"</cite>";
+         			}
+			  //abril
+			if (mescal==3 && midia==1 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de la Educación.'>"+midia+"</cite>";
+         			}
+        		if (mescal==3 && midia==7 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de la Salud.'>"+midia+"</cite>";
+         			}
+         		if (mescal==3 && midia==14 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día del Panamericanismo.'>"+midia+"</cite>";
+         			}
+         		if (mescal==3 && midia==19 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Proclamación de la Independencia.'>"+midia+"</cite>";
+         			}
+         		if (mescal==3 && midia==21 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de la Creatividad e Innovación.'>"+midia+"</cite>";
+         			}
+         		if (mescal==3 && midia==22 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día de La Tierra.'>"+midia+"</cite>";
+         			}
+			  //mayo
+			if (mescal==4 && midia==1 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional del Trabajador.'>"+midia+"</cite>";
+         			}
+        		if (mescal==4 && midia==4 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional del Combatiente de Incendios Forestales.'>"+midia+"</cite>";
+         			}
+         		if (mescal==4 && midia==8 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de la Cruz Roja.'>"+midia+"</cite>";
+         			}
+         		if (mescal==4 && midia==12 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de la Enfermera.'>"+midia+"</cite>";
+         			}
+         		if (mescal==4 && midia==17 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día mundial de reciclaje.'>"+midia+"</cite>";
+         			}
+         		if (mescal==4 && midia==31 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial sin tabaco.'>"+midia+"</cite>";
+         			}
+			   //junio
+			if (mescal==5 && midia==5 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional del Ambiente.'>"+midia+"</cite>";
+         			}
+        		if (mescal==5 && midia==8 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de los Océanos.'>"+midia+"</cite>";
+         			}
+         		if (mescal==5 && midia==14 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title=' Día Mundial del Donante de Sangre.'>"+midia+"</cite>";
+         			}
+         		if (mescal==5 && midia==24 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Batalla de Carabobo.'>"+midia+"</cite>";
+         			}
+         		if (mescal==5 && midia==27 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title=' Día nacional del periodista.'>"+midia+"</cite>";
+         			}
+			  //julio            
+	            if (mescal==6 && midia==5 && mianno==annohoy) { 
+                  
+ 		celda.style.backgroundColor="#80ffaa";
+                    
+		celda.innerHTML="<cite title='Declaración de la Independencia.'>"+midia+"</cite>";
+                 
+			}
+ 
+                if (mescal==6 && midia==16 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Nacional del Policía.'>"+midia+"</cite>";
+        		 }
+ 		if (mescal==6 && midia==21 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Aniversario del Cuerpo de Bomberos Universitarios de la U.M.C.'>"+midia+"</cite>";
+        		 }
+ 		if (mescal==6 && midia==24 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Natalicio del Libertador Simón Bolívar.'>"+midia+"</cite>";
+      		  	}
+     		 if (mescal==6 && midia==25 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Fundación de Caracas.'>"+midia+"</cite>";
+         		}
+			//agosto
+		if (mescal==7 && midia==3 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día de la Bandera.'>"+midia+"</cite>";
+        		}
+ 		if (mescal==7 && midia==9 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de los Pueblos Indígenas.'>"+midia+"</cite>";
+         		}
+	        if (mescal==7 && midia==20 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Nacional del Bombero.'>"+midia+"</cite>";
+         		}
+      		if (mescal==7 && midia==26 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional contra el Dengue.'>"+midia+"</cite>";
+         		}
+			//septiembre
+		if (mescal==8 && midia==8 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de la Fisioterapia.'>"+midia+"</cite>";
+         		}
+        	if (mescal==8 && midia==10 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial para la Prevención del Suicidio.'>"+midia+"</cite>";
+         		}
+	        if (mescal==8 && midia==21 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de la Paz.'>"+midia+"</cite>";
+         		}
+                if (mescal==8 && midia==23 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de las Lenguas de Señas.'>"+midia+"</cite>";
+         		}
+                if (mescal==8 && midia==25 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial del Farmacéutico.'>"+midia+"</cite>";
+         		}
+                if (mescal==8 && midia==28 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial contra la Rabia.'>"+midia+"</cite>";
+         		}
+                if (mescal==8 && midia==29 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial del Corazón.'>"+midia+"</cite>";
+         		}
+			//octubre
+		if (mescal==9 && midia==4 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de los Animales.'>"+midia+"</cite>";
+        	        }
+       		 if (mescal==9 && midia==12 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día de la Resistencia Indígena.'>"+midia+"</cite>";
+        		 }
+         	if (mescal==9 && midia==10 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Mundial de la salud Mental.'>"+midia+"</cite>";
+        		 }
+         	if (mescal==9 && midia==19 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día mundial contra el Cáncer de Mama.'>"+midia+"</cite>";
+         		 }
+			//noviembre
+		if (mescal==10 && midia==4 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title=' Día Mundial de la Diabetes'>"+midia+"</cite>";
+        		 }
+        	if (mescal==10 && midia==21 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día del Estudiante Universitario'>"+midia+"</cite>";
+         		 }
+         		//dieciembre
+		if (mescal==11 && midia==1 && mianno==annohoy) { 
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title=' Día Mundial de la Lucha Contra el SIDA y Día Mundial del Cinturón de Seguridad'>"+midia+"</cite>";
+         		 }
+        	if (mescal==11 && midia==3 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día Internacional de las Personas con Discapacidad'>"+midia+"</cite>";
+         		 }
+         	if (mescal==11 && midia==5 && mianno==annohoy) {   
+ 		celda.style.backgroundColor="#80ffaa";        
+		celda.innerHTML="<cite title='Día del Profesor Universitario.'>"+midia+"</cite>";
+         		 }
+                 //dias restantes del mes en gris
+			 
+                 if (mimes!=mescal) { 
+                     celda.style.backgroundColor="#c9ffff";
+                     
+			celda.style.color="grey";
+                    
+			}
+                 //destacar la fecha actual
+                 if (mimes==meshoy && midia==diahoy && mianno==annohoy ) { 
+                    celda.style.backgroundColor="#00FF7F";
+                    celda.innerHTML="<cite title='Fecha Actual'>"+midia+"</cite>";
+                    }
+                 //pasar al siguiente día
+                 midia=midia+1;
+                 diames.setDate(midia);
+                 }
+             }
+         }
+//Ver mes anterior
+function mesantes() {
+         nuevomes=new Date() //nuevo objeto de fecha
+         primeromes--; //Restamos un día al 1 del mes visualizado
+         nuevomes.setTime(primeromes) //cambiamos fecha al mes anterior 
+         mescal=nuevomes.getMonth() //cambiamos las variables que usarán las funciones
+         annocal=nuevomes.getFullYear()
+         cabecera() //llamada a funcion de cambio de cabecera
+         escribirdias() //llamada a funcion de cambio de tabla.
+         }
+//ver mes posterior
+function mesdespues() {
+         nuevomes=new Date() //nuevo obejto fecha
+         tiempounix=primeromes.getTime() //tiempo de primero mes visible
+         tiempounix=tiempounix+(45*24*60*60*1000) //le añadimos 45 días 
+         nuevomes.setTime(tiempounix) //fecha con mes posterior.
+         mescal=nuevomes.getMonth() //cambiamos variables 
+         annocal=nuevomes.getFullYear()
+         cabecera() //escribir la cabecera 
+         escribirdias() //escribir la tabla
+         }
+//volver al mes actual
+function actualizar() {
+         mescal=hoy.getMonth(); //cambiar a mes actual
+         annocal=hoy.getFullYear(); //cambiar a año actual 
+         cabecera() //escribir la cabecera
+         escribirdias() //escribir la tabla
+         }
+//ir al mes buscado
+function mifecha() {
+         //Recoger dato del año en el formulario
+         mianno=document.buscar.buscaanno.value; 
+         //recoger dato del mes en el formulario
+         listameses=document.buscar.buscames;
+         opciones=listameses.options;
+         num=listameses.selectedIndex
+         mimes=opciones[num].value;
+         //Comprobar si el año está bien escrito
+         if (isNaN(mianno) || mianno<1) { 
+            //año mal escrito: mensaje de error
+            alert("El año no es válido:\n debe ser un número mayor que 0")
+            }
+         else { //año bien escrito: ver mes en calendario:
+              mife=new Date(); //nueva fecha
+              mife.setMonth(mimes); //añadir mes y año a nueva fecha
+              mife.setFullYear(mianno);
+              mescal=mife.getMonth(); //cambiar a mes y año indicados
+              annocal=mife.getFullYear();
+              cabecera() //escribir cabecera
+              escribirdias() //escribir tabla
+              }
+         }
+
+var i = 0;
+var txt = 'Para la Para la primera semana se publicaran blablabla...';
+var speed = 50;
+var e = 0;
+var txt1 = 'Para la segunda semana se publicaran blablabla...';
+var speed = 50;
+var u = 0;
+var txt2 = 'Para la tercera semana se publicaran blablabla...';
+var speed = 50;
+var o = 0;
+var txt3 = 'Para la cuarta semana se publicaran blablabla...';
+var speed = 50;
+var c = 0;
+var txt4 = 'Para la quinta semana se publicaran blablabla...';
+var speed = 50;
+function typeWriter() {
+  if (i < txt.length) {
+    document.getElementById("semana0").innerHTML += txt.charAt(i);
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+function typeWriter1() {
+  if (e < txt1.length) {
+    document.getElementById("semana1").innerHTML += txt1.charAt(e);
+    e++;
+    setTimeout(typeWriter1, speed);
+  }
+}
+function typeWriter2() {
+  if (u < txt2.length) {
+    document.getElementById("semana2").innerHTML += txt2.charAt(u);
+    u++;
+    setTimeout(typeWriter2, speed);
+  }
+}
+function typeWriter3() {
+  if (o < txt3.length) {
+    document.getElementById("semana3").innerHTML += txt3.charAt(o);
+    o++;
+    setTimeout(typeWriter3, speed);
+  }
+}
+function typeWriter4() {
+  if (c < txt4.length) {
+    document.getElementById("semana4").innerHTML += txt4.charAt(c);
+    c++;
+    setTimeout(typeWriter4, speed);
+  }
+}
+</script>
+ </head>
+ <body>
+<div class="container mt-3">
+  <br>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#calendario"><p>Calendario.</p></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#fechas"><p>Fechas.</p></a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+	<img src="https://scontent-mia3-1.xx.fbcdn.net/v/t1.15752-9/117148748_583051305718610_79683623692633882_n.png?_nc_cat=100&_nc_sid=b96e70&_nc_ohc=xFbK_Y6QtdkAX9CHrZ8&_nc_ht=scontent-mia3-1.xx&oh=f3997e0b3c4c1039bd367ffb043f5ccd&oe=5F50DBC1" alt="" id="img1" width="80" height="80"/> 
+          	
+<img src="https://scontent-mia3-1.xx.fbcdn.net/v/t1.15752-9/116269139_333055931054954_7058410506442943663_n.png?_nc_cat=104&_nc_sid=b96e70&_nc_ohc=Mbj5V4wFJEQAX-n1207&_nc_ht=scontent-mia3-1.xx&oh=a6efbd083015b870963676ed197279f2&oe=5F50FF57" alt="" id="img2"width="80" height="80" />
+
+<div id="calendario" class="container tab-pane active"><br>
+     
+ <div class="container mt-3">
+
+<h1>Calendario</h1>
+<div id="calendario">
+  <div id="anterior" onclick="mesantes()"></div>
+  <div id="posterior" onclick="mesdespues()"></div>
+  <h2 id="titulos"></h2>
+  <table id="diasc">
+    <tr id="fila0"><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+    <tr id="fila1"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr id="fila2"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr id="fila3"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr id="fila4"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr id="fila5"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr id="fila6"><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <div id="fechaactual"><i onclick="actualizar()">Hoy es: </i></div>
+  <div id="buscafecha">
+    <form action="#" name="buscar">
+      <p>Buscar Mes
+        <select name="buscames">
+          <option value="0">Enero</option>
+          <option value="1">Febrero</option>
+          <option value="2">Marzo</option>
+          <option value="3">Abril</option>
+          <option value="4">Mayo</option>
+          <option value="5">Junio</option>
+          <option value="6">Julio</option>
+          <option value="7">Agosto</option>
+          <option value="8">Septiembre</option>
+          <option value="9">Octubre</option>
+          <option value="10">Noviembre</option>
+          <option value="11">Diciembre</option>
+        </select>
+       Año:
+        <input type="text" name="buscaanno" maxlength="4" size="4" />
+      <br/>
+        <input type="button" value="BUSCAR" onclick="mifecha()" />
+      </p>
+    </form>
+  </div>
+</div>
+<button type="button" class="btn danger" data-toggle="modal" data-target="#cronograma">Cronograma</button>
+
+<div class="modal fade" id="cronograma" role="dialog">
+    
+<div class="modal-dialog">
+    
+      
+<!-- Modal content-->
+      
+<div class="modal-content">
+        
+<div class="modal-header">
+          
+<h1 class="modal-title">Cronograma del mes:</h1>
+        
+</div>
+       
+ <div class="modal-body">
+          
+<button class="button button5" onclick="typeWriter()">Semana 1.</button>
+<p id="semana0"></p>
+<button class="button button5" onclick="typeWriter1()">Semana 2.</button>
+<p id="semana1"></p>
+<button class="button button5" onclick="typeWriter2()">Semana 3.</button>
+<p id="semana2"></p>
+<button class="button button5" onclick="typeWriter3()">Semana 4.</button>
+<p id="semana3"></p>
+<button class="button button5" onclick="typeWriter4()">Semana 5.</button>
+<p id="semana4"></p>
+
+</div>
+       
+ <div class="modal-footer">
+        
+  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+</div>
+     
+ </div>
+      
+    
+</div>
+</div>
+    </div>
+    </div>
+    
+    <br/>
+    <div id="fechas" class="container tab-pane fade"><br>
+     <div>
+         <div class="container mt-3">
+  <h1>Fechas</h1>
+  <center>
+  <div class="container">
+      <br/><br/>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Enero</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Enero</h1>
+        </div>
+        <div class="modal-body">
+          <p>6: Día del deporte.</p> 
+	<p>15: Día del maestro.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Febrero</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Febrero</h1>
+        </div>
+        <div class="modal-body">
+          <p>12: Día de la juventud y Batallade la victoria.</p>
+	<p>13: Día Mundial de la Radio.</p>
+	<p>15: Discurso de Angostura.</p>
+	<p>19: Día de la Federación.</p>
+	<p>21: Día internacional de la lengua materna.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal2">Marzo</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Marzo</h1>
+        </div>
+        <div class="modal-body">
+           <p>8: Día Internacional de la Mujer.</p>
+	  <p>10: Día del médico venezolano y Natalicio de José María Vargas.</p>
+	 <p>21: Día Mundial del Síndrome de Down.</p>
+	<p>22: Día Mundial del Agua.</p>
+	 <p>26: Día Mundial del Clima.</p>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <br/><br/>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal3">Abril</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal3" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Abril</h1>
+        </div>
+        <div class="modal-body">
+	<p>1: Día Mundial de la Educación.</p>
+          <p>7: Día Mundial de la Salud.</p>
+	<p>14: Día del Panamericanismo.</p>
+       <p>19: Proclamación de la Independencia.</p>
+	<p>21: Día Mundial de la Creatividad e Innovación.</p>
+	<p>22: Día de La Tierra.</p>
+	   
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal4">Mayo</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal4" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Mayo</h1>
+        </div>
+        <div class="modal-body">
+            <p>1: Día Internacional del Trabajador.</p>
+	  <p>4: Día Internacional del Combatiente de Incendios Forestales.</p>
+	<p>8: Día Internacional de la Cruz Roja.</p>
+	  <p>12: Día Internacional de la Enfermera.</p>
+	   <p>17: Día mundial de reciclaje.</p>
+	     <p>31: Día Mundial sin tabaco.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal5">Junio</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal5" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Junio</h1>
+        </div>
+        <div class="modal-body">
+          <p>5: Día Internacional del Ambiente.</p>
+	 <p>8: Día Mundial de los Océanos.</p>
+	<p>14: Día Mundial del Donante de Sangre.</p>
+	<p>24: Batalla de Carabobo.</p>
+	<p>27: Día nacional del periodista.</p>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <br/><br/>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal6">Julio</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal6" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Julio</h1>
+        </div>
+        <div class="modal-body">
+          <p>5: Declaración de la Independencia.</p>
+	<p>16: Día Nacional del Policía</p>
+	<p>21: Aniversario del Cuerpo de Bomberos Universitarios de la U.M.C.</p>
+	 <p>24: Natalicio del Libertador Simón Bolívar.</p>
+	<p>25: Fundación de Caracas.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal7">Agosto</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal7" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Agosto</h1>
+        </div>
+        <div class="modal-body">
+          <p>3: Día de la Bandera.</p>
+	<p>9: Día Internacional de los Pueblos Indígenas.</p>
+	<p>20: Día Nacional del Bombero.</p>
+	<p>26: Día Internacional contra el Dengue.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal8">Septiembre</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal8" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Septiembre</h1>
+        </div>
+        <div class="modal-body">
+	<p>8: Día Internacional de la Fisioterapia.</p>
+          <p>10: Día Mundial para la Prevención del Suicidio.</p>
+	<p>21: Día Internacional de la Paz.</p>
+	<p>23: Día Internacional de las Lenguas de Señas.</p>
+	<p>25: Día Mundial del Farmacéutico.</p>
+	<p>28: Día Mundial contra la Rabia.</p>
+	<p>29: Día Mundial del Corazón.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <br/><br/>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal9">Octubre</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal9" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Octubre</h1>
+        </div>
+        <div class="modal-body">
+          <p>4: Día Mundial de los Animales.</p>
+	 <p>12: Día de la Resistencia Indígena.</p>
+	 <p>10: Día Mundial de la salud Mental.</p>
+	 <p>19: Día mundial contra el Cáncer de Mama.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal10">Noviembre</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal10" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Noviembre</h1>
+        </div>
+        <div class="modal-body">
+          <p>14: Día Mundial de la Diabetes.</p>
+	 <p>21: Día del Estudiante Universitario.</p>
+	 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal11">Diciembre</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal11" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Diciembre</h1>
+        </div>
+        <div class="modal-body">
+          <p>1: Día Mundial de la Lucha Contra el SIDA y Día Mundial del Cinturón de Seguridad.</p>
+	 <p>3: Día Internacional de las Personas con Discapacidad.</p>
+	 <p>5: Día del Profesor Universitario.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  </center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
